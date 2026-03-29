@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusChain — Blockchain-Powered University Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a; --surface:#111; --surface2:#161616;
+  --border:rgba(255,255,255,0.07); --border-h:rgba(255,255,255,0.13);
+  --text:#ededee; --muted:#666; --muted2:#333;
+  --accent:#014221; --accent-h:#016b35;
+  --accent-d:rgba(1,66,33,0.16); --accent-b:rgba(1,66,33,0.28);
+  --accent-t:#4ade80;
+  --token:#f59e0b; --token-d:rgba(245,158,11,0.1); --token-b:rgba(245,158,11,0.22);
+  --blue:#60a5fa; --purple:#a78bfa;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Geist',-apple-system,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;border-bottom:1px solid var(--border);background:rgba(10,10,10,.9);backdrop-filter:blur(14px)}
+.logo{font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo-mark{width:26px;height:26px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:14px;height:14px}
+.logo-badge{font-size:.55rem;background:var(--token-d);color:var(--token);border:1px solid var(--token-b);border-radius:4px;padding:2px 7px;font-weight:700;letter-spacing:.08em;margin-left:2px}
+.nav-links{display:flex;gap:0}
+.nav-link{color:var(--muted);text-decoration:none;font-size:.82rem;padding:0 1.1rem;height:56px;display:flex;align-items:center;border-right:1px solid var(--border);transition:color .15s}
+.nav-link:first-child{border-left:1px solid var(--border)}
+.nav-link:hover{color:var(--text)}
+.nav-cta{display:flex;align-items:center;gap:.6rem}
+.btn-ghost-nav{color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:6px;padding:.4rem .9rem;font-size:.8rem;text-decoration:none;transition:all .15s;font-family:'Geist',sans-serif}
+.btn-ghost-nav:hover{color:var(--text);border-color:var(--border-h)}
+.btn-accent-nav{color:#fff;background:var(--accent);border-radius:6px;padding:.4rem .9rem;font-size:.8rem;text-decoration:none;transition:background .15s;font-family:'Geist',sans-serif}
+.btn-accent-nav:hover{background:var(--accent-h)}
+
+/* HERO */
+.hero{padding:140px 2rem 90px;max-width:900px;margin:0 auto;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:500;color:var(--muted);border:1px solid var(--border);border-radius:100px;padding:.3rem .9rem;margin-bottom:2.5rem;letter-spacing:.06em;text-transform:uppercase}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--accent-t);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(2.6rem,5.5vw,4.8rem);font-weight:400;line-height:1.08;letter-spacing:-2px;color:var(--text);margin-bottom:1.5rem}
+h1 em{font-style:italic;color:var(--muted)}
+h1 .highlight{color:var(--accent-t)}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:520px;margin:0 auto 2.5rem;font-weight:300;line-height:1.8}
+.hero-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-primary{background:var(--accent);color:#fff;padding:.7rem 1.6rem;border-radius:7px;font-size:.88rem;font-weight:500;text-decoration:none;transition:all .15s;font-family:'Geist',sans-serif;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--accent-h)}
+.btn-outline{background:transparent;color:var(--muted);padding:.7rem 1.6rem;border-radius:7px;font-size:.88rem;font-weight:400;text-decoration:none;border:1px solid var(--border);transition:all .15s;font-family:'Geist',sans-serif}
+.btn-outline:hover{color:var(--text);border-color:var(--border-h)}
+
+/* CHAIN PREVIEW */
+.chain-strip{display:flex;align-items:center;justify-content:center;gap:0;overflow:hidden;padding-bottom:1rem;margin-bottom:1rem}
+.chain-b{flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;font-size:.62rem;font-family:monospace;text-align:left;min-width:100px}
+.chain-b.live{border-color:var(--accent-b);background:var(--accent-d)}
+.chain-b .bn{color:var(--accent-t);font-weight:700;font-size:.68rem}
+.chain-b .bh{color:var(--muted2);font-size:.55rem;margin-top:1px}
+.chain-arr{color:var(--muted2);font-size:.8rem;padding:0 4px;flex-shrink:0}
+
+/* STATS ROW */
+.stats-row{display:flex;justify-content:center;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:680px;margin:0 auto;background:var(--surface)}
+.stat-item{flex:1;padding:1.25rem;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Instrument Serif',serif;font-size:1.9rem;font-weight:400;letter-spacing:-1px;margin-bottom:2px}
+.stat-desc{font-size:.72rem;color:var(--muted)}
+
+/* SECTION */
+section{padding:80px 2rem;max-width:1100px;margin:0 auto}
+section.full{max-width:100%;padding:80px 0;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+section.full .inner{max-width:1100px;margin:0 auto;padding:0 2rem}
+.section-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-t);font-weight:600;margin-bottom:.9rem}
+h2{font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;letter-spacing:-1px;margin-bottom:1rem;line-height:1.15}
+.section-sub{font-size:.95rem;color:var(--muted);max-width:520px;line-height:1.75}
+
+/* FEATURES GRID */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:3rem}
+.feature-item{background:var(--surface);padding:2rem;transition:background .2s}
+.feature-item:hover{background:var(--surface2)}
+.feature-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem;flex-shrink:0}
+.feature-icon.green{background:var(--accent-d);border:1px solid var(--accent-b)}
+.feature-icon.amber{background:var(--token-d);border:1px solid var(--token-b)}
+.feature-icon.blue{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2)}
+.feature-icon.purple{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+.feature-title{font-size:.95rem;font-weight:600;margin-bottom:.5rem}
+.feature-desc{font-size:.82rem;color:var(--muted);line-height:1.7}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-top:3rem}
+.step{text-align:center}
+.step-num{font-family:'Instrument Serif',serif;font-size:2.5rem;color:var(--accent-b);line-height:1;margin-bottom:.75rem}
+.step-title{font-size:.9rem;font-weight:600;margin-bottom:.4rem}
+.step-desc{font-size:.8rem;color:var(--muted);line-height:1.65}
+
+/* ROLES */
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem}
+.role-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.role-icon{font-size:1.5rem;margin-bottom:.75rem}
+.role-title{font-size:.95rem;font-weight:600;margin-bottom:.5rem}
+.role-perms{display:flex;flex-direction:column;gap:.35rem}
+.perm{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.perm::before{content:"✓";color:var(--accent-t);font-size:.7rem;flex-shrink:0}
+
+/* TOKEN SECTION */
+.token-box{background:linear-gradient(135deg,rgba(1,66,33,.12),rgba(1,66,33,.04));border:1px solid var(--accent-b);border-radius:16px;padding:2.5rem;text-align:center;margin-top:3rem}
+.token-symbol{font-family:'Instrument Serif',serif;font-size:3.5rem;color:var(--token);letter-spacing:-2px;margin-bottom:.5rem}
+.token-name-big{font-size:1rem;font-weight:600;margin-bottom:.5rem}
+.token-tagline{font-size:.85rem;color:var(--muted);margin-bottom:2rem}
+.token-props{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+.token-prop{text-align:center}
+.token-prop-val{font-size:1.1rem;font-weight:700;color:var(--accent-t)}
+.token-prop-label{font-size:.68rem;color:var(--muted);margin-top:2px}
+
+/* CTA */
+.cta-section{text-align:center;padding:100px 2rem}
+.cta-section h2{margin-bottom:1.25rem}
+.cta-section .section-sub{margin:0 auto 2.5rem}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:.75rem}
+footer strong{color:var(--text)}
+
+@media(max-width:700px){
+  .nav-links{display:none}
+  .roles-grid{grid-template-columns:1fr}
+  h1{letter-spacing:-1px}
+  .stats-row{flex-direction:column}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-item:last-child{border-bottom:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 12 12" fill="none">
+        <path d="M6 1L11 3.5V8.5L6 11L1 8.5V3.5L6 1Z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M6 5V7M6 5L8 4M6 5L4 4" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    CampusChain
+    <span class="logo-badge">BLOCKCHAIN</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#contracts" class="nav-link">Smart Contracts</a>
+    <a href="#token" class="nav-link">CCT Token</a>
+    <a href="#roles" class="nav-link">Roles</a>
+  </div>
+  <div class="nav-cta">
+    <a href="CampusChain-app.html" class="btn-ghost-nav">Sign in</a>
+    <a href="CampusChain-app.html" class="btn-accent-nav">Launch App →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow"><span class="eyebrow-dot"></span>FT-01 · CampusChain · Hackathon Submission</div>
+  <h1>The <em>blockchain financial</em><br>ecosystem for <span class="highlight">universities</span></h1>
+  <p class="hero-sub">Secure, transparent, and automated digital transactions across your entire campus — powered by smart contracts and a campus-native token.</p>
+  <div class="hero-actions">
+    <a href="CampusChain-app.html" class="btn-primary">Launch App →</a>
+    <a href="#features" class="btn-outline">See how it works</a>
+  </div>
+
+  <!-- Live chain strip -->
+  <div class="chain-strip">
+    <div class="chain-b"><div class="bn">#14,201</div><div class="bh">3 txs · 0x3fa1…</div></div>
+    <div class="chain-arr">→</div>
+    <div class="chain-b"><div class="bn">#14,202</div><div class="bh">1 tx · 0x8bc2…</div></div>
+    <div class="chain-arr">→</div>
+    <div class="chain-b"><div class="bn">#14,203</div><div class="bh">5 txs · 0x2de4…</div></div>
+    <div class="chain-arr">→</div>
+    <div class="chain-b"><div class="bn">#14,204</div><div class="bh">2 txs · 0xf7a9…</div></div>
+    <div class="chain-arr">→</div>
+    <div class="chain-b live"><div class="bn">⬤ Live</div><div class="bh">syncing…</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num" style="color:var(--accent-t)">CCT</div><div class="stat-desc">Campus Coin Token</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--blue)">4</div><div class="stat-desc">Smart Contracts</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--token)">0%</div><div class="stat-desc">Transaction Fees</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--purple)">3</div><div class="stat-desc">User Roles</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Core Features</div>
+  <h2>Everything a campus<br>financial system needs</h2>
+  <p class="section-sub">Built around the four pillars of the problem statement — token system, secure transactions, smart contracts, and admin controls.</p>
+
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon amber">🪙</div>
+      <div class="feature-title">Campus-Specific Digital Token</div>
+      <div class="feature-desc">CampusChain Token (CCT) is the native currency of your university. Students receive CCT on signup and use it for all campus transactions — fees, canteen, events, and peer transfers.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon green">🔒</div>
+      <div class="feature-title">Secure On-chain Transactions</div>
+      <div class="feature-desc">Every payment — fee settlements, event registrations, peer-to-peer transfers, and service charges — is recorded immutably on the blockchain with a unique hash and block number.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon blue">📜</div>
+      <div class="feature-title">Smart Contract Automation</div>
+      <div class="feature-desc">Auto fee deductions, scholarship disbursements, event ticket escrow, and spending policy enforcement all run as programmable smart contracts — no manual processing needed.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon purple">🛡️</div>
+      <div class="feature-title">Admin Controls</div>
+      <div class="feature-desc">Administrators can mint tokens, manage user permissions, suspend accounts, configure transaction policies, and view real-time analytics across the entire campus ecosystem.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon green">⚡</div>
+      <div class="feature-title">Peer-to-Peer Payments</div>
+      <div class="feature-desc">Students can send CCT directly to peers instantly. Split expenses, repay friends, or settle group purchases — all secured and transparent on the blockchain.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon amber">🎟️</div>
+      <div class="feature-title">Event Ticket Escrow</div>
+      <div class="feature-desc">Register for campus events and pay in CCT. Tokens are held in escrow by smart contract and released to the organiser only after event confirmation — fully trustless.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SMART CONTRACTS -->
+<section class="full" id="contracts">
+  <div class="inner">
+    <div class="section-label">Smart Contracts</div>
+    <h2>Payments that run<br>themselves</h2>
+    <p class="section-sub">CampusChain ships with four built-in smart contracts that automate the most common university financial operations.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:2.5rem">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.6rem;color:var(--blue);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem">PAYMENT</div>
+        <div style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Auto Fee Payment</div>
+        <div style="font-size:.78rem;color:var(--muted);line-height:1.65">Deducts semester fees automatically on due date. Zero missed payments, zero manual work.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.6rem;color:var(--accent-t);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem">DISBURSEMENT</div>
+        <div style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Scholarship Release</div>
+        <div style="font-size:.78rem;color:var(--muted);line-height:1.65">Releases scholarship CCT when student CGPA threshold is met and approval is on-chain.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.6rem;color:var(--token);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem">ESCROW</div>
+        <div style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Event Ticket Escrow</div>
+        <div style="font-size:.78rem;color:var(--muted);line-height:1.65">Holds CCT in escrow on registration. Auto-refunds if cancelled. Releases to organiser on confirmation.</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.6rem;color:var(--purple);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem">POLICY</div>
+        <div style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">Daily Spending Cap</div>
+        <div style="font-size:.78rem;color:var(--muted);line-height:1.65">Enforces daily canteen and transfer limits. Transactions exceeding the cap are automatically blocked.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKEN -->
+<section id="token">
+  <div class="section-label">The Token</div>
+  <h2>Campus Coin Token</h2>
+  <p class="section-sub">CCT is the native digital currency of CampusChain — a campus-specific token that powers every transaction in the ecosystem.</p>
+
+  <div class="token-box">
+    <div class="token-symbol">CCT</div>
+    <div class="token-name-big">Campus Coin Token</div>
+    <div class="token-tagline">The secure, transparent, campus-native digital currency</div>
+    <div class="token-props">
+      <div class="token-prop"><div class="token-prop-val">1000</div><div class="token-prop-label">Initial allocation</div></div>
+      <div class="token-prop"><div class="token-prop-val">0%</div><div class="token-prop-label">Gas / transaction fees</div></div>
+      <div class="token-prop"><div class="token-prop-val">∞</div><div class="token-prop-label">Admin mintable supply</div></div>
+      <div class="token-prop"><div class="token-prop-val">100%</div><div class="token-prop-label">On-chain audit trail</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="full" style="margin:0">
+  <div class="inner">
+    <div class="section-label">How It Works</div>
+    <h2>From signup to<br>transaction in seconds</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Create Your Wallet</div>
+        <div class="step-desc">Sign up as student or admin. Your campus wallet is created instantly with 1,000 CCT allocated from the treasury.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Transact On-Chain</div>
+        <div class="step-desc">Pay fees, register for events, transfer to peers, or receive scholarships — every transaction is hashed and recorded on the blockchain.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Smart Contracts Execute</div>
+        <div class="step-desc">Pre-programmed contracts handle fee deductions, scholarship disbursements, and policy enforcement automatically.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Admin Oversees All</div>
+        <div class="step-desc">Administrators have full visibility — mint tokens, manage users, configure policies, and monitor the entire financial ecosystem in real time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section id="roles">
+  <div class="section-label">User Roles</div>
+  <h2>Designed for every<br>campus stakeholder</h2>
+  <div class="roles-grid">
+    <div class="role-card">
+      <div class="role-icon">🎓</div>
+      <div class="role-title">Student</div>
+      <div class="role-perms">
+        <div class="perm">View token balance & history</div>
+        <div class="perm">Pay fees & fines</div>
+        <div class="perm">Send/receive peer payments</div>
+        <div class="perm">Register for campus events</div>
+        <div class="perm">View smart contracts</div>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">🛡️</div>
+      <div class="role-title">Admin</div>
+      <div class="role-perms">
+        <div class="perm">Full system access</div>
+        <div class="perm">Mint & disburse tokens</div>
+        <div class="perm">Manage all users & roles</div>
+        <div class="perm">Configure transaction policies</div>
+        <div class="perm">Suspend / restore accounts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="section-label">Get Started</div>
+  <h2>Ready to decentralise<br>your campus finance?</h2>
+  <p class="section-sub" style="margin:0 auto 2.5rem">Create your campus wallet in 30 seconds. Students get 1,000 CCT on signup — free, forever.</p>
+  <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+    <a href="CampusChain-app.html" class="btn-primary">Launch App →</a>
+    <a href="CampusChain-app.html" class="btn-outline">Sign in as Admin</a>
+  </div>
+</div>
+
+<footer>
+  <strong>CampusChain</strong> · FT-01 Hackathon Submission · Blockchain-Powered University Financial Ecosystem
+</footer>
+
+</body>
+</html>
